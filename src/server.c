@@ -24,13 +24,15 @@ void start(int port, Subject subject[], int subject_size){
         }
         char buffer[BUF_SIZE];
         read(dialogSocket, &buffer, sizeof(buffer));
-        if(strcmp(buffer, "end")){
+        if(strcmp(buffer, "end") == 0){
             close(dialogSocket);
             break;
         }
         double avg = getAverage(atoi(buffer), subject, subject_size);
         
-        write(dialogSocket, &avg, sizeof(avg));
+        char response[BUF_SIZE];
+        sprintf(response, "%lf", avg);
+        write(dialogSocket, response, strlen(response) + 1);
     }
     close(socket);
 }
