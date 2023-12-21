@@ -9,7 +9,9 @@
 #include "../header/socket.h"
 #include "../header/subject.h"
 
-void start(int port){
+#define BUF_SIZE 256
+
+void start(int port, Subject subject[], int subject_size){
     int socket = initServeur(port);
     while(1){
         struct sockaddr_in caller;
@@ -20,8 +22,16 @@ void start(int port){
             close(dialogSocket);
             close(socket);
         }
-        
+        char buffer[BUF_SIZE];
+        read(dialogSocket, &buffer, sizeof(buffer));
+        if(strcpm(buffer, "end")){
+            close(dialogSocket);
+            break;
+        }
+        double avg = getAverage(atoi(buffer), subject, subject_size);
+        write(dialogSocket, &avg, sizeof(avg));
     }
+    close(socket);
 }
 
 int main(int argc, char** argv){
@@ -38,7 +48,7 @@ int main(int argc, char** argv){
     };
 
     int port = atoi(argv[1]);
-    start(port);
+    start(port, subjectArray, 5);
 
     return EXIT_SUCCESS;
 }
