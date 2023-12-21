@@ -9,7 +9,7 @@
 #define BUF_SIZE 256
 
 void sendMessage(int socket, const char* message){
-    write(socket, message, strlen(message));
+    write(socket, message, strlen(message) + 1);
 }
 
 void start(int argc, char** argv){
