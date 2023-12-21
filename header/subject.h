@@ -2,7 +2,7 @@
 #define __SUBJECT_H__
 
 typedef struct {
-	int number;
+	unsigned int type;
 	char* name;
 	double average;
 } Subject;
