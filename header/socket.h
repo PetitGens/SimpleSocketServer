@@ -9,6 +9,7 @@ int connectToServer(const char* ipAdress, short int port);
 
 /**
  * Initialize a TCP server on the specified port
+ * @return the listening socket
 */
 int initServeur(int port);
 
