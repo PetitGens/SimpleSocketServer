@@ -29,6 +29,7 @@ void start(int port, Subject subject[], int subject_size){
             break;
         }
         double avg = getAverage(atoi(buffer), subject, subject_size);
+        
         write(dialogSocket, &avg, sizeof(avg));
     }
     close(socket);
@@ -48,7 +49,11 @@ int main(int argc, char** argv){
     };
 
     int port = atoi(argv[1]);
-    start(port, subjectArray, 5);
+    if(port <= 0 || port > 0xFFFF){
+        printf("Port invalide.\n");
+        exit(EXIT_FAILURE);
+    }
+    start(port, subjectArray, 6);
 
     return EXIT_SUCCESS;
 }
