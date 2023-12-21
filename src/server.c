@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
+#include <string.h>
 #include "../header/socket.h"
 #include "../header/subject.h"
 
@@ -24,7 +24,7 @@ void start(int port, Subject subject[], int subject_size){
         }
         char buffer[BUF_SIZE];
         read(dialogSocket, &buffer, sizeof(buffer));
-        if(strcpm(buffer, "end")){
+        if(strcmp(buffer, "end")){
             close(dialogSocket);
             break;
         }
