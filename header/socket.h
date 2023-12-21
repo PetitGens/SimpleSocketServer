@@ -5,7 +5,7 @@
  * Connects to the server with the specified IP address and the specified port.
  * @return the socket that can be used to communicate with the server
 */
-int connectToServer(const char* ipAdress, short int port);
+int connectToServer(const char* ipAddress, short int port);
 
 /**
  * Initialize a TCP server on the specified port
