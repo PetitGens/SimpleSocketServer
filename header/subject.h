@@ -7,6 +7,6 @@ typedef struct {
 	double average;
 } Subject;
 
-double getAverage(char* name, Subject subject[], int size);
+double getAverage(unsigned int type, Subject subject[], int size);
 
 #endif //__SUBJECT_H__

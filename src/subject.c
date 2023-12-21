@@ -7,3 +7,4 @@ double getAverage(unsigned int type, Subject subject[], int size){
 	}
 	return -1;
 }
+
