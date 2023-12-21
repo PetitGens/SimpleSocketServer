@@ -16,16 +16,14 @@ struct sockaddr_in initAddressStructure(const char* ipAddress, short int port){
     return addressStruture;
 }
 
-int connectToServer(const char* ipAdress, short int port){
+int connectToServer(const char* ipAddress, short int port){
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock < 0){
         perror("socket");
         exit(EXIT_FAILURE);
     }
 
-    printf("Port : %hu\n", port);
-
-    struct sockaddr_in address = initAddressStructure(ipAdress, port);
+    struct sockaddr_in address = initAddressStructure(ipAddress, port);
 
     if(connect(sock, (struct sockaddr*)&address, sizeof(address)) != 0){
         perror("connect");
