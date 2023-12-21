@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -22,8 +23,6 @@ int connectToServer(const char* ipAdress, short int port){
         exit(EXIT_FAILURE);
     }
 
-    short int port = atoi(ipAdress);
-
     printf("Port : %hu\n", port);
 
     struct sockaddr_in address = initAddressStructure(ipAdress, port);
@@ -37,7 +36,7 @@ int connectToServer(const char* ipAdress, short int port){
     return sock;
 }
 
-int initServeur(int port, struct sockaddr_in* pAdresse){
+int initServeur(int port){
     int listeningSocket = socket(AF_INET, SOCK_STREAM, 0);
     if(listeningSocket < 0){
         perror("socket");

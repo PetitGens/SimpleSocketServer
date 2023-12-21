@@ -10,6 +10,6 @@ int connectToServer(const char* ipAdress, short int port);
 /**
  * Initialize a TCP server on the specified port
 */
-int initServeur(int port, struct sockaddr_in* pAdresse);
+int initServeur(int port);
 
 #endif //__SER_SOCKET_H__

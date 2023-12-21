@@ -11,3 +11,9 @@ client.o :
 
 server.o :
 	gcc -o bin/server.o -c src/server.c -Wall -Werror
+
+socket.o :
+	gcc -o bin/socket.o -c src/socket.c -Wall -Werror
+
+subject.o :
+	gcc -o bin/subject.o -c src/subject.c -Wall -Werror
