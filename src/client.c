@@ -4,14 +4,24 @@
 #include <string.h>
 
 #include "../header/socket.h"
-#include "../header/subject.h"
 
 #define BUF_SIZE 256
 
+/**
+ * Sends a message via the specified socket.
+ * @param socket the newtwork socket the message must be sent with
+ * @param message the message to send
+*/
 void sendMessage(int socket, const char* message){
-    write(socket, message, strlen(message) + 1);
+    if(write(socket, message, strlen(message) + 1)){
+        exit(EXIT_FAILURE);
+    }
+
 }
 
+/**
+ * Starts the client's main program.
+*/
 void start(int argc, char** argv){
     if(argc < 4){
         printf("Ce programme prend 3 arguments en paramètre.\n");

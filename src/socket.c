@@ -47,7 +47,7 @@ int initServeur(int port){
     if (setsockopt(listeningSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1) {
         perror("setsockopt");
         exit(EXIT_FAILURE);
-    }
+    }   
 
     struct sockaddr_in address = initAddressStructure("0.0.0.0", port);
 
