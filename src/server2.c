@@ -6,10 +6,20 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <signal.h>
 #include "../header/socket.h"
 #include "../header/subject.h"
 
 #define BUF_SIZE 256
+
+int dialogSocket;
+
+void onSignal(int sigNum){
+    if(sigNum == SIGUSR1){
+        close(dialogSocket);
+        exit(EXIT_SUCCESS);
+    }
+}
 
 void processQuery(int dialogSocket, Subject*  subjects, int subjectCount){
     char buffer[BUF_SIZE];
@@ -30,7 +40,8 @@ void start(int port, Subject subject[], int subject_size){
     while(1){
         struct sockaddr_in caller;
         socklen_t size = sizeof(caller);
-        int dialogSocket = accept(socket, (struct sockaddr *)&caller, &size);
+        int pid = fork();
+        dialogSocket = accept(socket, (struct sockaddr *)&caller, &size);
         if(dialogSocket < 0){
             perror("accept");
             close(dialogSocket);
@@ -38,6 +49,7 @@ void start(int port, Subject subject[], int subject_size){
         }
 
         processQuery(dialogSocket, subject, subject_size);
+        signal(SIGUSR1, onSignal);
     }
     close(socket);
 }
