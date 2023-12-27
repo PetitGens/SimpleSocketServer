@@ -51,7 +51,11 @@ int main(int argc, char** argv){
     };
 
     int port = atoi(argv[1]);
-    start(port, subjectArray, 5);
+    if(port <= 0 || port > 0xFFFF){
+        printf("Port invalide.\n");
+        exit(EXIT_FAILURE);
+    }
+    start(port, subjectArray, 6);
 
     return EXIT_SUCCESS;
 }
