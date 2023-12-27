@@ -13,10 +13,10 @@
  * @param message the message to send
 */
 void sendMessage(int socket, const char* message){
-    if(write(socket, message, strlen(message) + 1)){
+    if(write(socket, message, strlen(message) + 1) < 0){
+        perror("write");
         exit(EXIT_FAILURE);
     }
-
 }
 
 /**
@@ -37,9 +37,7 @@ void start(int argc, char** argv){
     }
 
     int socket = connectToServer(argv[1], port);
-
     sendMessage(socket, argv[3]);
-
     char response[BUF_SIZE];
     read(socket, response, BUF_SIZE);
 

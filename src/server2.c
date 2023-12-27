@@ -11,6 +11,20 @@
 
 #define BUF_SIZE 256
 
+void processQuery(int dialogSocket, Subject*  subjects, int subjectCount){
+    char buffer[BUF_SIZE];
+        read(dialogSocket, &buffer, sizeof(buffer));
+        if(strcmp(buffer, "end") == 0){
+            close(dialogSocket);
+            exit(EXIT_SUCCESS);
+        }
+        double avg = getAverage(atoi(buffer), subjects, subjectCount);
+        
+        char response[BUF_SIZE];
+        sprintf(response, "%lf", avg);
+        write(dialogSocket, response, strlen(response) + 1);
+}
+
 void start(int port, Subject subject[], int subject_size){
     int socket = initServeur(port);
     while(1){
@@ -22,18 +36,8 @@ void start(int port, Subject subject[], int subject_size){
             close(dialogSocket);
             close(socket);
         }
-        char buffer[BUF_SIZE];
-        read(dialogSocket, &buffer, sizeof(buffer));
 
-        if(strcmp(buffer, "end") == 0){
-            close(dialogSocket);
-            break;
-        }
-        double avg = getAverage(atoi(buffer), subject, subject_size);
-        
-        char response[BUF_SIZE];
-        sprintf(response, "%lf", avg);
-        write(dialogSocket, response, strlen(response) + 1);
+        processQuery(dialogSocket, subject, subject_size);
     }
     close(socket);
 }
