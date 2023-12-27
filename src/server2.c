@@ -6,40 +6,68 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <signal.h>
 #include "../header/socket.h"
 #include "../header/subject.h"
 
 #define BUF_SIZE 256
 
+#define DEBUG
+
+int serverSocket;
+
+void onSignal(int sigNum){
+    if(sigNum == SIGUSR1){
+        close(serverSocket);
+        exit(EXIT_SUCCESS);
+    }
+}
+
 void processQuery(int dialogSocket, Subject*  subjects, int subjectCount){
     char buffer[BUF_SIZE];
-        read(dialogSocket, &buffer, sizeof(buffer));
-        if(strcmp(buffer, "end") == 0){
-            close(dialogSocket);
-            exit(EXIT_SUCCESS);
-        }
-        double avg = getAverage(atoi(buffer), subjects, subjectCount);
-        
-        char response[BUF_SIZE];
-        sprintf(response, "%lf", avg);
-        write(dialogSocket, response, strlen(response) + 1);
+    read(dialogSocket, &buffer, sizeof(buffer));
+
+    if(strcmp(buffer, "end") == 0){
+        close(dialogSocket);
+        kill(getppid(), SIGUSR1);        
+        exit(EXIT_SUCCESS);
+    }
+
+    double avg = getAverage(atoi(buffer), subjects, subjectCount);
+    
+    char response[BUF_SIZE];
+    sprintf(response, "%lf", avg);
+
+    write(dialogSocket, response, strlen(response) + 1);
+    close(dialogSocket);
 }
 
 void start(int port, Subject subject[], int subject_size){
-    int socket = initServeur(port);
+    serverSocket = initServeur(port);
+    signal(SIGUSR1, onSignal);
+
     while(1){
         struct sockaddr_in caller;
         socklen_t size = sizeof(caller);
-        int dialogSocket = accept(socket, (struct sockaddr *)&caller, &size);
+        int dialogSocket = accept(serverSocket, (struct sockaddr *)&caller, &size);
         if(dialogSocket < 0){
             perror("accept");
             close(dialogSocket);
-            close(socket);
+            close(serverSocket);
+            exit(EXIT_FAILURE);
         }
-
-        processQuery(dialogSocket, subject, subject_size);
+        
+        int pid = fork();
+        switch(pid){
+            case -1:
+                perror("fork");
+                exit(EXIT_FAILURE);    
+            case 0:
+                processQuery(dialogSocket, subject, subject_size);
+                exit(EXIT_SUCCESS);
+        }
     }
-    close(socket);
+    close(serverSocket);
 }
 
 int main(int argc, char** argv){
