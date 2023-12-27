@@ -7,6 +7,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#define QUERIES_QUEUE_SIZE 10
+
 struct sockaddr_in initAddressStructure(const char* ipAddress, short int port){
     struct sockaddr_in addressStruture;
     addressStruture.sin_family = PF_INET;
@@ -57,7 +59,7 @@ int initServeur(int port){
         exit(EXIT_FAILURE);
     }
 
-    if(listen(listeningSocket, 10) < 0){
+    if(listen(listeningSocket, QUERIES_QUEUE_SIZE) < 0){
         perror("listen");
         close(listeningSocket);
         exit(EXIT_FAILURE);

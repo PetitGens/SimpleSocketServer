@@ -41,7 +41,9 @@ void start(int argc, char** argv){
     char response[BUF_SIZE];
     read(socket, response, BUF_SIZE);
 
-    printf("Moyenne  : %s.\n", response);
+    if(strcmp(argv[3], "end") != 0){
+        printf("Moyenne  : %s.\n", response);    
+    }
 
     close(socket);
 }
